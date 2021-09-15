@@ -1,4 +1,4 @@
-import modules.graphic
+from optimal_traveller.modules import loader, solver, graphic
 
 
 class cli:
