@@ -14,7 +14,7 @@ def main():
 
     action.add_argument("-l", "--load", help = "load a *.txt or *.json file into the solver", action = "store")
     action.add_argument("-s", "--solve", help = "compute an optimal path with the given method", action = "store")
-    action.add_argument("-d", "--display",- help = "display a previously computed path", action = "store")
+    action.add_argument("-d", "--display", help = "display a previously computed path", action = "store")
 
     if len(sys.argv) == 1:
         parser.print_help()
