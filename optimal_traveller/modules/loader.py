@@ -18,6 +18,6 @@ class loader:
 
         city_list = []
         for location in data:                           #for every city we get its name, latitude, longitude
-            city_list.append(city(location('capital'), location('lat'), location('long')))
+            city_list.append(city(location('capital'), float(location('lat')), float(location('long')))
 
         self.city_list = np.city_list()                 #eventually we get a tabular with the cities' data
