@@ -1,7 +1,8 @@
-from classes import load, solver, display
+import modules.graphic
+
 
 class cli:
-    __init__(self):
+    def __init__(self):
         pass
 
     def load(filename):

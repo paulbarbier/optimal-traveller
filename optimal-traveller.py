@@ -3,7 +3,9 @@
 import argparse
 import sys
 
-from optimal-traveller import cli
+from optimal_traveller import cli
+
+sys.path.append("/modules/")
 
 def main():
     parser = argparse.ArgumentParser()
