@@ -1,9 +1,8 @@
-from optimal_traveller.modules.loader import loader
-from optimal_traveller.modules.solver import solver
-from optimal_traveller.modules.graphic import graphic
+from optimal_traveller.modules.loader import Loader
+from optimal_traveller.modules.solver import Solver
+from optimal_traveller.modules.graphic import Graphic
 
-
-class CLI:
+class Cli:
     def load(self, filename, metric):
         print("load")
 

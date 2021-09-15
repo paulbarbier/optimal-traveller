@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from optimal_traveller.cli import cli
+from optimal_traveller.cli import Cli
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
     arguments = parser.parse_args()
 
     # Create a cli object to handle commands
-    app = cli()
+    app = Cli()
 
     if arguments.command == "load":
         app.load(arguments.filename, arguments.metric)

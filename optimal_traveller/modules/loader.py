@@ -2,14 +2,14 @@ import json
 import numpy as np
 
 
-class CITY:
+class City:
     def __init__(self, name, latitude, longitude):  # initializer
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
 
 
-class LOADER:
+class Loader:
     def __init__(self):
         pass
 
@@ -20,7 +20,7 @@ class LOADER:
 
         city_list = []
         for location in data:  # for every city we get its name, latitude, longitude
-            city_list.append(CITY(data[location]['capital'], float(data[location]['lat']), float(data[location]['long'])))
+            city_list.append(City(data[location]['capital'], float(data[location]['lat']), float(data[location]['long'])))
 
         self.cities_list = np.array(city_list)  # eventually we get a tabular with the cities' data
 
