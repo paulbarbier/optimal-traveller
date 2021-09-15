@@ -1,3 +1,5 @@
+from classes import load, solver, display
+
 class cli:
     __init__(self):
         pass

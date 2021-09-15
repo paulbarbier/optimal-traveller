@@ -3,6 +3,8 @@
 import argparse
 import sys
 
+from optimal-traveller import cli
+
 def main():
     parser = argparse.ArgumentParser()
     
