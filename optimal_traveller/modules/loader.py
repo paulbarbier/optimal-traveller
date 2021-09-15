@@ -10,8 +10,8 @@ class CITY:
 
 
 class LOADER:
-    def __init__(self, city_list):
-        self.cities_list = np.array(city_list)
+    def __init__(self):
+        pass
 
     def load_json(self, file_adress):                   # loads the data from a json file
         f = open(str(file_adress), "r")                 # opens the file
@@ -19,13 +19,10 @@ class LOADER:
         f.close()
 
         city_list = []
-        print("entering data exploration")
         for location in data:  # for every city we get its name, latitude, longitude
             city_list.append(CITY(data[location]['capital'], float(data[location]['lat']), float(data[location]['long'])))
-        print("data explored")
 
         self.cities_list = np.array(city_list)  # eventually we get a tabular with the cities' data
-        print("data put into tabular")
 
     def distances(self):
         nb_villes = len(self.cities_list)
