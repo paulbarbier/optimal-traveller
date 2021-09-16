@@ -1,4 +1,5 @@
 import pyomo.environ as pyo
+from pyomo.opt import SolverFactory
 
 
 class Solver:
@@ -63,10 +64,10 @@ class Solver:
         model.UConstraint = pyo.Constraint(model.I, model.J, rule=constr_u)
 
         instance = model.create_instance()
-        exact_solver = pyo.SolverFactory('exact method')
+        exact_solver = SolverFactory('exact method')
         exact_solver.solve(instance)
 
-        print(model.X[1, 1], "\n", model.X[model.n, 4])
+        print(pyo.value(model.X[1, 1]), "\n", pyo.value(model.X[model.n, 4]))
 
 
 test = Solver()
