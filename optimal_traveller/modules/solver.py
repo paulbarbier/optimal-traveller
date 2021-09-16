@@ -7,8 +7,13 @@ class Solver:
         pass
 
     # Fonction finale qui ajoute la solution dans data
-    def Solver_Dijkstra(self):
+
+    def solver_dijkstra(self):
         W = data["weight-matrix"]
         Liste = data['cities']
         Ordre = Dijkstra(W, Liste, 0)
         data['solutions'].append({"method": "Dijkstra", "resulting_path": Ordre})
+
+    def exact_solver(self):
+        test = Solver()
+        test.exact_method('pyomo_data.txt')
