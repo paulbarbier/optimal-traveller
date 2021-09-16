@@ -1,6 +1,6 @@
-from methods.dijkstra import NearestNeighbour
+from modules.methods.dijkstra import NearestNeighbour
 # from modules.methods.exact import Exact
-from loader import Loader
+from modules.loader import Loader
 
 class Solver:
     def __init__(self):
@@ -14,19 +14,20 @@ class Solver:
         Liste = [i for i in range(nb_cities)]
         solution = NearestNeighbour()
         Ordre = solution.nearest_neighbour(W, Liste, start_city)
-        data['solutions'].append({"method": "Dijkstra", "resulting_path": Ordre})
+        data['solutions'].append({"method": "Nearest Neighbour", "resulting_path": Ordre})
+
 
     def exact_solver(self):
         test = Solver()
         test.exact_method('pyomo_data.txt')
 
 
-def main():
-    test = Loader()
-    test.read_json('test.opt')
-    set = test.data
-    new = Solver()
-    new.solver_nn(set, 8)
+# def main():
+#    test = Loader()
+#    test.read_json('test.opt')
+#    set = test.data
+#    new = Solver()
+#    new.solver_nn(set, 8)
 
 
-main()
+# main()

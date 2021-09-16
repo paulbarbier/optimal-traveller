@@ -1,6 +1,6 @@
-from optimal_traveller.modules.loader import Loader
-from optimal_traveller.modules.solver import Solver
-from optimal_traveller.modules.graphic import Graphic
+from modules.loader import Loader
+from modules.solver import Solver
+from modules.graphic import Graphic
 
 
 class Cli:
@@ -36,12 +36,14 @@ class Cli:
         if method == "exact":
             pass
         elif method == "nearest-neighbors":
-            pass
+            set = self.loader.data
+            new = Solver()
+            new.solver_nn(set, 8)
         elif method == "genetic":
             pass
 
         print("Problem successfully solved!")
-        self.loader.data = solver.data
+        self.loader.data = set
         self.loader.write_json(filename)
         print("file successfully written to ", filename)
 
@@ -49,3 +51,5 @@ class Cli:
         self.loader.read_json(solution)
 
 
+test = Cli()
+test.solve('modules/test.opt', 'nearest-neighbors')
