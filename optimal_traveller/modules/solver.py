@@ -61,3 +61,7 @@ class Solver:
         model.XDiagConstraint = pyo.Constraint(model.I, rule=constr_x_diag)
         model.URangeConstraint = pyo.Constraint(model.I, rule=constr_u_range)
         model.UConstraint = pyo.Constraint(model.I, model.J, rule=constr_u)
+
+        instance = model.creat_instance()
+        exact_solver = pyo.SolverFactory('exact method')
+        exact_solver.solve(instance)
