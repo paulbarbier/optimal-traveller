@@ -2,47 +2,33 @@ class Dijkstra:
     def __init__(self):
         pass
 
-        #####Fonctions auxiliaires_Dijkstra
-        def distances_entre(self, W, city1, city2):
-            return W[city1][city2]
+    # Fonctions auxiliaires_Dijkstra
+    def choix_plus_proche_voisin(self, W, noeuds_restants, noeud_actuel):
+        min = noeuds_restants[0]
+        for i in range(1, len(noeuds_restants)):
+            if W[noeud_actuel][noeuds_restants[i]] < W[noeud_actuel][min]:
+                min = noeuds_restants[i]
+        return min
 
-        def choix_plus_proche_voisin(self, Liste, poids):
-            min = 0
-            for city in Liste:
-                if poids[min] > poids[city]:
-                    min = city
-            return (min)
+    def supprime(self, Liste, noeud):
+        indice = 0
+        for i in range(0, len(Liste)):
+            if Liste[i] == noeud:
+                indice = i
+        del Liste[indice]
 
-        def supprime(self, Liste, noeud):
-            indice = 0
-            for i in range(0, len(noeud)):
-                if Liste[i] == noeud:
-                    indice = i
-            del Liste[indice]
+    # Fonction presque finale
+    def Dijkstra(self, W, Noeuds_restants, Noeud_depart):
+        nb_villes = len(Noeuds_restants)
+        Ordre = [Noeud_depart]
+        self.supprime(Noeuds_restants, Noeud_depart)
+        while len(Ordre) < nb_villes:
+            new_noeud = self.choix_plus_proche_voisin(W, Noeuds_restants, Ordre[-1])
+            Ordre.append(new_noeud)
+            self.supprime(Noeuds_restants, new_noeud)
 
-        def init_poids(self, Noeud_départ, Liste_villes):
-            n = len(Liste_villes)
-            poids = []
-            for i in range(0, n):
-                if i == Noeud_départ:
-                    poids[i] = 0
-                else:
-                    poids[i] = float("inf")
-            return poids
-
-        # Fonction presque finale
-        def Dijkstra(self, W, Liste_villes, Noeud_départ):
-            En_cours = []
-            Ordre = []
-            poids = init_poids(Noeud_départ, Liste_villes)
-            En_cours.append(Noeud_départ)
-            while len(En_cours) != 0:
-                new_noeud = choix_plus_proche_voisin(En_cours, poids)
-                Ordre.append(new_noeud)
-                supprime(Liste_villes, new_noeud)
-                for city in Liste_villes:
-                    if poids[city] > poids[new_noeud] + distances_entre(W, city, new_noeud):
-                        poids[city] = poids[new_noeud] + distances_entre(W, city, new_noeud)
-                        En_cours.append(city)
-                supprime(En_cours, new_noeud)
-            return Ordre
+        for i in range(nb_villes):
+            Ordre[i]+=1
+        Ordre.append(Ordre[0])
+        print(Ordre)
+        return Ordre
