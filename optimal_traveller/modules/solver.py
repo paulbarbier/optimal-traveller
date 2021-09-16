@@ -20,14 +20,4 @@ class Solver:
     def exact_solver(self):
         test = Solver()
         test.exact_method('pyomo_data.txt')
-
-
-# def main():
-#    test = Loader()
-#    test.read_json('test.opt')
-#    set = test.data
-#    new = Solver()
-#    new.solver_nn(set, 8)
-
-
-# main()
+        
