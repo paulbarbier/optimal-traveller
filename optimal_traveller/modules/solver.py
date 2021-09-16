@@ -23,7 +23,7 @@ class Solver:
     def exact_method(self, pyomo_format_data):
         model = pyo.AbstractModel()
 
-        model.n = pyo.Param(within=pyo.NonNegativeIntegers)
+        model.n = pyo.Param(within=pyo.NonNegativeIntegers, default=5)
 
         model.I = pyo.RangeSet(1, model.n)
         model.J = pyo.RangeSet(1, model.n)
@@ -67,3 +67,7 @@ class Solver:
         exact_solver.solve(instance)
 
         print(model.X[1, 1], "\n", model.X[model.n, 4])
+
+
+test = Solver()
+test.exact_method('pyomo_data.txt')
