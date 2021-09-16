@@ -1,54 +1,63 @@
 import pyomo.environ as pyo
 
+
 class Solver:
     def __init__(self):
         pass
 
-exact_method = pyo.AbstractModel()
+    def get_data_for_pyomo(self, data):
+        pyomo_data = open('pyomo_data.txt', 'w+')
 
-exact_method.n = pyo.Param(within=pyo.NonNegativeIntegers)
+        n = len(data['cities'])
+        pyomo_data.write("param n := ", n, " ;\n\n")
 
-exact_method.I = pyo.RangeSet(1, exact_method.n)
-exact_method.J = pyo.RangeSet(1, exact_method.n)
+        pyomo_data.write("param W :=\n")
+        for i in range(n):
+            for j in range(n):
+                pyomo_data.write(" ", data['weight_matrix'][i][j])
+            pyomo_data.write("\n")
+        pyomo_data.write(" ;\n")
 
-exact_method.W = pyo.Param(exact_method.I, exact_method.J, domain=pyo.NonNegativeReals)
+        pyomo_data.close()
 
-# variables
-exact_method.X = pyo.Var(exact_method.I, exact_method.J, domain=pyo.Binary)
-exact_method.u = pyo.Var(exact_method.I, domain=pyo.NonNegativeReals)
+    def exact_method(self, pyomo_format_data):
+        model = pyo.AbstractModel()
 
+        model.n = pyo.Param(within=pyo.NonNegativeIntegers)
 
-# objective function
-def objective_expression(model):
-    return pyo.summation(model.W, model.X)
+        model.I = pyo.RangeSet(1, model.n)
+        model.J = pyo.RangeSet(1, model.n)
 
+        model.W = pyo.Param(model.I, model.J, domain=pyo.NonNegativeReals)
 
-exact_method.OBJ = pyo.Objective(rule=objective_expression)
+        # variables
+        model.X = pyo.Var(model.I, model.J, domain=pyo.Binary)
+        model.u = pyo.Var(model.I, domain=pyo.NonNegativeReals)
 
+        # objective function
+        def objective_expression(m):
+            return pyo.summation(m.W, m.X)
 
-# constraints
-def constr_x_line(model, j):
-    return sum(model.X[i, j] for i in model.I) == 1
+        model.OBJ = pyo.Objective(rule=objective_expression)
 
+        # constraints
+        def constr_x_line(m, j):
+            return sum(m.X[i, j] for i in m.I) == 1
 
-def constr_x_column(model, i):
-    return sum(model.X[i, j] for j in model.J) == 1
+        def constr_x_column(m, i):
+            return sum(m.X[i, j] for j in m.J) == 1
 
+        def constr_x_diag(m, i):
+            return m.X[i, i] == 0
 
-def constr_x_diag(model, i):
-    return model.X[i, i] == 0
+        def constr_u_range(m, i):
+            return 2 <= m.u[i] <= m.n
 
+        def constr_u(m, i, j):
+            return (m.u[i]-m.u[j]) <= (m.n - m.X[i, j]*(m.n + 1))
 
-def constr_u_range(model, i):
-    return 2 <= model.u[i] <= model.n
-
-
-def constr_u(model, i, j):
-    return (model.u[i]-model.u[j]) <= (model.n - model.X[i, j]*(model.n + 1))
-
-
-exact_method.XLineConstraint = pyo.Constraint(exact_method.J, rule=constr_x_line)
-exact_method.XColumnConstraint = pyo.Constraint(exact_method.I, rule=constr_x_column)
-exact_method.XDiagConstraint = pyo.Constraint(exact_method.I, rule=constr_x_diag)
-exact_method.URangeConstraint = pyo.Constraint(exact_method.I, rule=constr_u_range)
-exact_method.UConstraint = pyo.Constraint(exact_method.I, exact_method.J, rule=constr_u)
+        model.XLineConstraint = pyo.Constraint(model.J, rule=constr_x_line)
+        model.XColumnConstraint = pyo.Constraint(model.I, rule=constr_x_column)
+        model.XDiagConstraint = pyo.Constraint(model.I, rule=constr_x_diag)
+        model.URangeConstraint = pyo.Constraint(model.I, rule=constr_u_range)
+        model.UConstraint = pyo.Constraint(model.I, model.J, rule=constr_u)
