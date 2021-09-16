@@ -18,7 +18,7 @@ def main():
 
     # Add arguments to commands
     load_parser.add_argument("-f", "--filename", help="FILENAME.txt or FILENAME.json to be loaded in the solver", type=str, required=True)
-    load_parser.add_argument("-m", "--metric", help="metric used to compute the distance matrix: euclidian, ...", type=str, required=True)
+    load_parser.add_argument("-m", "--metric", help="metric used to compute the distance matrix: euclidean or orthodromic", type=str, choices=["euclidean", "orthodromic"], default="orthodromic")
 
     solve_parser.add_argument("-g", "--graph", help="name of the cities graph previously computed by the load command",
                               type=str, required=True)
