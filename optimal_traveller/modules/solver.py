@@ -38,7 +38,7 @@ class Solver:
         def objective_expression(m):
             return pyo.summation(m.W, m.X)
 
-        model.OBJ = pyo.Objective(rule=objective_expression)
+        model.OBJ = pyo.Objective(rule=objective_expression, sense=pyo.minimize)
 
         # constraints
         def constr_x_line(m, j):
@@ -62,6 +62,8 @@ class Solver:
         model.URangeConstraint = pyo.Constraint(model.I, rule=constr_u_range)
         model.UConstraint = pyo.Constraint(model.I, model.J, rule=constr_u)
 
-        instance = model.creat_instance()
+        instance = model.create_instance()
         exact_solver = pyo.SolverFactory('exact method')
         exact_solver.solve(instance)
+
+        print(model.X[1, 1], "\n", model.X[model.n, 4])
