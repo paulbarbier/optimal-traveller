@@ -26,7 +26,7 @@ class Cli:
         output_filename = basename + ".opt"
         print("Save data to ", output_filename)
         self.loader.write_json(output_filename)
-        print("Loading dataset successfully!")
+        print("Dataset successfully loaded!")
 
     def solve(self, graph, method):
         print("solve")
