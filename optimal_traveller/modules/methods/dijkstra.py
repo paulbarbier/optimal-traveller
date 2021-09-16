@@ -18,7 +18,7 @@ class Dijkstra:
             for i in range(0, len(noeud)):
                 if Liste[i] == noeud:
                     indice = i
-            del Liste[i]
+            del Liste[indice]
 
         def init_poids(self, Noeud_départ, Liste_villes):
             n = len(Liste_villes)
