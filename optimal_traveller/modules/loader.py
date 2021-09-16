@@ -20,7 +20,7 @@ class Loader:
                          "weight_matrix": [],
                          "solutions": []}
 
-            i = 1
+            i = 0
             for location in input_json:
                 self.data["cities"].append({"id": i,
                                             "name": input_json[location]['capital'],
@@ -28,9 +28,9 @@ class Loader:
                                             "longitude": float(input_json[location]['long'])})
                 i += 1
 
-            self.data["settings"]["number_cities"] = i-1
+            self.data["settings"]["number_cities"] = i
 
-            self.data["weight_matrix"] = [[0 for k in range(i-1)] for l in range(i-1)]
+            self.data["weight_matrix"] = [[0 for k in range(i)] for l in range(i)]
 
     def read_json(self, filename):
         with open(filename, "r") as json_file:
