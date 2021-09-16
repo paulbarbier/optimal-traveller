@@ -1,5 +1,5 @@
 import json
-from math import sqrt
+from math import sqrt, radians, sin, cos, asin
 
 
 class Loader:
@@ -9,11 +9,11 @@ class Loader:
     def load_txt(self, filename):
         pass
 
-    def load_json(self, filename, metric):
+    def load_json(self, filename):
         with open(filename) as json_file:
             input_json = json.load(json_file)
 
-            self.data = {"settings": {"metric": metric,
+            self.data = {"settings": {"metric": "",
                                       "filename": filename,
                                       "number_cities": 0},
                          "cities": [],
@@ -46,7 +46,26 @@ class Loader:
         for city_row in self.data["cities"]:
             column_number = 0
             for city_column in self.data["cities"][:row_number]:
-                self.data["weight_matrix"][row_number][column_number] = sqrt((city_row["latitude"] - city_column["latitude"])**2 + (city_row["longitude"] - city_column["longitude"])**2)
+                self.data["weight_matrix"][row_number][column_number] = \
+                    sqrt((city_row["latitude"] - city_column["latitude"])**2 +
+                         (city_row["longitude"] - city_column["longitude"])**2)
+                self.data["weight_matrix"][column_number][row_number] = \
+                    self.data["weight_matrix"][row_number][column_number]
+                column_number += 1
+            row_number += 1
+        self.data["settings"]["metric"] = "euclidean"
+
+    def compute_orthodromic_distances(self):
+        row_number = 0
+        for city_row in self.data["cities"]:
+            column_number = 0
+            for city_column in self.data["cities"][:row_number]:
+                latitude_rad_row = radians(city_row["latitude"])
+                latitude_rad_column = radians(city_column["latitude"])
+                delta_rad_latitude = latitude_rad_row - latitude_rad_column
+                delta_rad_longitude = radians(city_row["longitude"]) - radians(city_column["longitude"])
+                self.data["weight_matrix"][row_number][column_number] = 2*6371*asin(sin(delta_rad_latitude/2)**2 + cos(latitude_rad_row)*cos(latitude_rad_column)*(sin(delta_rad_longitude/2))**2)
                 self.data["weight_matrix"][column_number][row_number] = self.data["weight_matrix"][row_number][column_number]
                 column_number += 1
             row_number += 1
+        self.data["settings"]["metric"] = "orthodromic"
