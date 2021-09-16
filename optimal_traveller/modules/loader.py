@@ -64,7 +64,7 @@ class Loader:
                 latitude_rad_column = radians(city_column["latitude"])
                 delta_rad_latitude = latitude_rad_row - latitude_rad_column
                 delta_rad_longitude = radians(city_row["longitude"]) - radians(city_column["longitude"])
-                self.data["weight_matrix"][row_number][column_number] = 2*6371*asin(sin(delta_rad_latitude/2)**2 + cos(latitude_rad_row)*cos(latitude_rad_column)*(sin(delta_rad_longitude/2))**2)
+                self.data["weight_matrix"][row_number][column_number] = 2*6371*asin(sqrt(sin(delta_rad_latitude/2)**2 + cos(latitude_rad_row)*cos(latitude_rad_column)*(sin(delta_rad_longitude/2))**2))
                 self.data["weight_matrix"][column_number][row_number] = self.data["weight_matrix"][row_number][column_number]
                 column_number += 1
             row_number += 1
