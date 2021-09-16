@@ -1,5 +1,5 @@
 from optimal_traveller.modules.methods.dijkstra import Dijkstra
-from optimal_traveller.modules.methods.direct import Direct
+from optimal_traveller.modules.methods.exact import Exact
 
 
 class Solver:
