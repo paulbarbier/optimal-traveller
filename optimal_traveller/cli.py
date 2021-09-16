@@ -28,9 +28,24 @@ class Cli:
         self.loader.write_json(output_filename)
         print("Dataset successfully loaded!")
 
-    def solve(self, graph, method):
-        print("solve")
+    def solve(self, filename, method):
+        self.loader.read_json(filename)
+        #solver = Solver(self.loader.data)
+
+        print("Solving the Travelling Salesman Problem with ", method, "method...")
+        if method == "exact":
+            pass
+        elif method == "nearest-neighbors":
+            pass
+        elif method == "genetic":
+            pass
+
+        print("Problem successfully solved!")
+        self.loader.data = solver.data
+        self.loader.write_json(filename)
+        print("file successfully written to ", filename)
 
     def display(self, solution):
-        print("display")
+        self.loader.read_json(solution)
+
 
