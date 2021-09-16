@@ -20,11 +20,11 @@ def main():
     load_parser.add_argument("-f", "--filename", help="FILENAME.txt or FILENAME.json to be loaded in the solver", type=str, required=True)
     load_parser.add_argument("-m", "--metric", help="metric used to compute the distance matrix: euclidean or orthodromic", type=str, choices=["euclidean", "orthodromic"], default="orthodromic")
 
-    solve_parser.add_argument("-g", "--graph", help="name of the cities graph previously computed by the load command",
+    solve_parser.add_argument("-f", "--file", help="FILE.opt containing previsoulty computed distance matrix and data of the problem",
                               type=str, required=True)
-    solve_parser.add_argument("-m", "--method", help="select the method used to solve: ", type=str, required=True)
+    solve_parser.add_argument("-m", "--method", help="select the method used to solve: ", type=str, choices=["exact", "nearest-neighbors", "genetic"], required=True)
 
-    display_parser.add_argument("-s", "--solution", help="SOLUTION is the name of the solution to be displayed", type=str, required=True)
+    display_parser.add_argument("-s", "--solution", help="SOLUTION.opt, file of the solution(s) to be displayed", type=str, required=True)
 
     # Print the help menu when there is no typed commands
     if len(sys.argv) == 1:
