@@ -1,5 +1,5 @@
 import folium
-
+import os
 
 class Graphic:
     def __init__(self, data):
@@ -7,6 +7,7 @@ class Graphic:
         self.solutions = data["solutions"]
         self.longitude_center = float
         self.latitude_center = float
+        self.filename = data["settings"]["filename"]
 
     def compute_center(self):
         latitudes = []
@@ -32,8 +33,10 @@ class Graphic:
                 path[0].append(self.coordinates_from_id(city))
             path[0].append(self.coordinates_from_id(solution["resulting_path"][0]))
 
-            usa = folium.Map(location=[self.latitude_center, self.longitude_center], zoom_start=4)
+            usa = folium.Map(location=[self.latitude_center, self.longitude_center], zoom_start=5)
             for city in self.cities:
                 folium.Marker(location=[city["latitude"], city["longitude"]], popup=city["name"]).add_to(usa)
             folium.PolyLine(path, color='red').add_to(usa)
-            usa.save(solution["method"] + ".html")
+            display_filename = self.filename + "_" + solution["method"] + ".html"
+            usa.save(display_filename)
+            os.system("open " + display_filename)

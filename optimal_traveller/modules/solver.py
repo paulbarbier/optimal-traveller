@@ -4,8 +4,11 @@ from optimal_traveller.modules.methods.genetic import Genetic
 
 
 class Solver:
-    def __init__(self, data):
+    def __init__(self, data, percentage, maxsteps, size):
         self.data = data
+        self.percentage = percentage
+        self.maxsteps = maxsteps
+        self.size = size
         self.resulting_path = []
 
     def nearest_neighbors_solver(self):
@@ -19,6 +22,6 @@ class Solver:
         self.resulting_path = solver.resulting_path
 
     def genetic_solver(self):
-        solver = Genetic(percentage, size, steps, self.data["weight_matrix"])
+        solver = Genetic(self.percentage, self.size, self.maxsteps, self.data["weight_matrix"])
         solver.solve()
         self.resulting_path = solver.resulting_path

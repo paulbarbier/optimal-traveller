@@ -3,12 +3,14 @@ random.seed()
 
 
 class Genetic:
-    def __init__(self, percentage, size, steps, w):
+    def __init__(self, percentage, size, steps, weight_matrix):
         self.percentage = percentage
         self.population = []
         self.size = size
         self.steps = steps
-        self.weight_matrix = w
+        self.weight_matrix = weight_matrix
+        self.number_cities = len(weight_matrix)
+        self.resulting_path = []
 
     def fitness(self, path_ind):
         fitness = 0
@@ -27,13 +29,6 @@ class Genetic:
         path.append(path[1])
         self.population.append(path)
         self.fitness(len(self.population)-1)
-
-    # def path_crosser(self, path1, path2, weight):
-    #    indice1 = random.randrange(len(self.population[path1]))
-    #    indice2 = random.randrange(len(self.population[path2]))
-    #    self.population[path1][indice1], self.population[path2][indice2] = self.population[path2][indice2], self.population[path1][indice1]
-    #    self.fitness(weight, self.population[path1])
-    #    self.fitness(weight, self.population[path2])
 
     def path_mutation(self, path_ind):
         new_path = self.population[path_ind].copy()
@@ -68,7 +63,8 @@ class Genetic:
         for i in range(self.size):
             self.random_path_generator(nodes.copy())
 
-    def solve(self, nodes):
+    def solve(self):
+        nodes = [i for i in range(self.number_cities)]
         self.population_generator(nodes.copy())
         self.sort_population()
         self.select_population()
@@ -80,10 +76,3 @@ class Genetic:
             self.select_population()
             iteration += 1
         self.resulting_path = self.population[0][1:]
-
-
-W = [[0, 2, 3, 4, 5], [4, 0, 1, 6, 4], [5, 2, 0, 4, 6], [1, 1, 1, 0, 2], [3, 4, 2, 4, 0]]
-
-test = Genetic(0.5, 10, 5, W)
-test.solve([1,2,3,4,5])
-print(test.resulting_path)
