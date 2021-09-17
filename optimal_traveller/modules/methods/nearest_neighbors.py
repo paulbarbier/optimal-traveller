@@ -30,7 +30,7 @@ class NearestNeighbors:
         random_start_node = random.choice(self.remaining_cities)
         self.resulting_path.append(random_start_node)
         self.delete_node(random_start_node)
-        while len(self.resulting_path) < self.number_remaining_cities:
+        while len(self.resulting_path) < self.number_cities:
             new_node = self.get_nearest_neighbour()
             self.resulting_path.append(new_node)
             self.delete_node(new_node)
