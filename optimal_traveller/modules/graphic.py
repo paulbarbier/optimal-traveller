@@ -37,6 +37,6 @@ class Graphic:
             for city in self.cities:
                 folium.Marker(location=[city["latitude"], city["longitude"]], popup=city["name"]).add_to(usa)
             folium.PolyLine(path, color='red').add_to(usa)
-            display_filename = self.filename + "_" + solution["method"] + ".html"
+            display_filename = self.filename.split(".")[0] + "_" + solution["method"] + ".html"
             usa.save(display_filename)
             os.system("open " + display_filename)
