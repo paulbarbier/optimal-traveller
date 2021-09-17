@@ -5,65 +5,46 @@ class Exact:
     def __init__(self):
         pass
 
-    def get_data_for_pyomo(self, data):
-        pyomo_data = open('pyomo_data.txt', 'w+')
+    def exact_method(self, weight, nb_cities):
+        model = pyo.ConcreteModel()
 
-        n = len(data['cities'])
-        pyomo_data.write("param n := ", n, " ;\n\n")
+        model.row = pyo.RangeSet(nb_cities)
+        model.column = pyo.RangeSet(nb_cities)
+        model.us = pyo.RangeSet(2, nb_cities)
 
-        pyomo_data.write("param W :=\n")
-        for i in range(n):
-            for j in range(n):
-                pyomo_data.write(" ", data['weight_matrix'][i][j])
-            pyomo_data.write("\n")
-        pyomo_data.write(" ;\n")
+        model.W = pyo.Param(model.row, model.column, initialize=lambda model,i,j: weight[i-1][j-1])
 
-        pyomo_data.close()
+        model.X = pyo.Var(model.row, model.column, domain=pyo.Binary)
+        model.u = pyo.Var(model.row, domain=pyo.NonNegativeIntegers, bounds=(0, nb_cities-1))
 
-    def exact_method(self, pyomo_format_data):
-        model = pyo.AbstractModel()
+        def objective_expression(model):
+            return sum(model.W[i,j]*model.X[i,j] for i in model.row for j in model.column)
 
-        model.n = pyo.Param(within=pyo.NonNegativeIntegers, default=5)
+        model.objective = pyo.Objective(rule=objective_expression, sense=pyo.minimize)
 
-        model.I = pyo.RangeSet(1, model.n)
-        model.J = pyo.RangeSet(1, model.n)
+        def constr_x_line(model, column):
+            return sum([model.X[i, column] for i in model.row if i!=column]) == 1
 
-        model.W = pyo.Param(model.I, model.J, domain=pyo.NonNegativeReals)
+        def constr_x_column(model, row):
+            return sum([model.X[row, j] for j in model.column if j!=row]) == 1
 
-        # variables
-        model.X = pyo.Var(model.I, model.J, domain=pyo.Binary)
-        model.u = pyo.Var(model.I, domain=pyo.NonNegativeReals)
+        def constr_u(model, row, column):
+            if row != column:
+                return model.u[row]-model.u[column] + model.X[row, column]*nb_cities <= nb_cities-1
+            else:
+                return model.u[row]-model.u[row] == 0
 
-        # objective function
-        def objective_expression(m):
-            return pyo.summation(m.W, m.X)
+        model.XLineConstraint = pyo.Constraint(model.column, rule=constr_x_line)
+        model.XColumnConstraint = pyo.Constraint(model.row, rule=constr_x_column)
+        model.UConstraint = pyo.Constraint(model.us, model.column, rule=constr_u)
 
-        model.OBJ = pyo.Objective(rule=objective_expression, sense=pyo.minimize)
+        solver = SolverFactory('glpk')
+        exact_result = solver.solve(model)
 
-        # constraints
-        def constr_x_line(m, j):
-            return sum(m.X[i, j] for i in m.I) == 1
-
-        def constr_x_column(m, i):
-            return sum(m.X[i, j] for j in m.J) == 1
-
-        def constr_x_diag(m, i):
-            return m.X[i, i] == 0
-
-        def constr_u_range(m, i):
-            return 2 <= m.u[i] <= m.n
-
-        def constr_u(m, i, j):
-            return (m.u[i]-m.u[j]) <= (m.n - m.X[i, j]*(m.n + 1))
-
-        model.XLineConstraint = pyo.Constraint(model.J, rule=constr_x_line)
-        model.XColumnConstraint = pyo.Constraint(model.I, rule=constr_x_column)
-        model.XDiagConstraint = pyo.Constraint(model.I, rule=constr_x_diag)
-        model.URangeConstraint = pyo.Constraint(model.I, rule=constr_u_range)
-        model.UConstraint = pyo.Constraint(model.I, model.J, rule=constr_u)
-
-        instance = model.create_instance()
-        exact_solver = SolverFactory('exact method')
-        exact_solver.solve(instance)
-
-        print(pyo.value(model.X[1, 1]), "\n", pyo.value(model.X[model.n, 4]))
+        L = list(model.X.keys())
+        solution = []
+        for indice in L:
+            if model.X[indice]() != 0:
+                solution.append(indice[0])
+        solution.append(solution[0])
+        return solution
