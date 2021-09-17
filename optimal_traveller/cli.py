@@ -36,7 +36,9 @@ class Cli:
 
         print("Solving the Travelling Salesman Problem with ", method, "method...")
         if method == "exact":
-            pass
+            data = self.loader.data
+            new = Solver()
+            new.exact_solver(data)
         elif method == "nearest-neighbors":
             solver.nearest_neighbors_solver()
         elif method == "genetic":
