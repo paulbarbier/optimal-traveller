@@ -24,7 +24,7 @@ def main():
                               type=str, required=True)
     solve_parser.add_argument("-m", "--method", help="select the method used to solve: ", type=str, choices=["exact", "nearest-neighbors", "genetic"], required=True)
 
-    display_parser.add_argument("-s", "--solution", help="SOLUTION.opt, file of the solution(s) to be displayed", type=str, required=True)
+    display_parser.add_argument("-f", "--filename", help="FILENAME.opt, file of the solution(s) to be displayed", type=str, required=True)
 
     # Print the help menu when there is no typed commands
     if len(sys.argv) == 1:
@@ -42,7 +42,7 @@ def main():
     elif arguments.command == "solve":
         app.solve(arguments.filename, arguments.method)
     elif arguments.command == "display":
-        app.display(arguments.solution)
+        app.display(arguments.filename)
 
 
 if __name__ == "__main__":

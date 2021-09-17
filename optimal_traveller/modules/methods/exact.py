@@ -18,20 +18,20 @@ class Exact:
         return sum([model.paths[row, column] for column in model.columns if column != row]) == 1
 
     def constr_u(self, model, row, column):
-        if row != column:
-            return model.u[row] - model.u[column] + model.paths[row, column] * self.number_cities <= self.number_cities
+        if row != column and row >= 2:
+            return model.u[row] - model.u[column] + model.paths[row, column] * self.number_cities <= self.number_cities-1
         else:
             return pyo.Constraint.Feasible
 
     def solve(self):
         model = pyo.ConcreteModel()
 
-        model.rows = pyo.RangeSet(0, self.number_cities-1)
-        model.columns = pyo.RangeSet(0, self.number_cities-1)
-        model.us = pyo.RangeSet(1, self.number_cities-1)
+        model.rows = pyo.RangeSet(self.number_cities)
+        model.columns = pyo.RangeSet(self.number_cities)
+        model.us = pyo.RangeSet(2, self.number_cities)
 
         model.weight_matrix = pyo.Param(model.rows, model.columns,
-                                        initialize=lambda model, row, column: self.weight_matrix[row][column])
+                                        initialize=lambda model, row, column: self.weight_matrix[row-1][column-1])
 
         model.paths = pyo.Var(model.rows, model.columns, domain=pyo.Binary)
 
@@ -43,12 +43,18 @@ class Exact:
         model.XColumnConstraint = pyo.Constraint(model.rows, rule=self.constr_x_column)
         model.UConstraint = pyo.Constraint(model.us, model.columns, rule=self.constr_u)
 
-        solver = SolverFactory('glpk')
+        solver = SolverFactory("glpk")
         solver.solve(model)
 
-        L = list(model.paths.keys())
+        first_point, last_point = 1, 2
+        self.resulting_path.append(first_point-1)
+        while True:
+            while model.paths[(first_point, last_point)]() != 1:
+                last_point += 1
 
-        for index in L:
-            if model.paths[index]() != 0:
-                self.resulting_path.append(index[0])
-        self.resulting_path.append(self.resulting_path[0])
+            self.resulting_path.append(last_point-1)
+
+            first_point, last_point = last_point, 1
+
+            if first_point == 1:
+                break

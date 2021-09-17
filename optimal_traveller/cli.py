@@ -50,3 +50,5 @@ class Cli:
 
     def display(self, solution):
         self.loader.read_json(solution)
+        display = Graphic(self.loader.data)
+        display.display()
