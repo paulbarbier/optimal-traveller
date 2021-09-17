@@ -9,17 +9,14 @@ class Solver:
         self.resulting_path = []
 
     def nearest_neighbors_solver(self):
-        solver = NearestNeighbors(self.data)
+        solver = NearestNeighbors(self.data["weight_matrix"])
         solver.solve()
         self.resulting_path = solver.resulting_path
 
-    def exact_solver(self, data):
-        W = data["weight_matrix"]
-        nb_cities = data['settings']['number_cities']
-        build = Exact()
-        solution = build.exact_method(W, nb_cities)
-        print(solution)
-        data['solutions'].append({"method": "Exact Method", "resulting_path": solution})
+    def exact_solver(self):
+        solver = Exact(self.data["weight_matrix"])
+        solver.solve()
+        self.resulting_path = solver.resulting_path
 
-    def genetic(self):
+    def genetic_solver(self):
         pass

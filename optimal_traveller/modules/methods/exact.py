@@ -1,50 +1,54 @@
 import pyomo.environ as pyo
 from pyomo.opt import SolverFactory
 
-class Exact:
-    def __init__(self):
-        pass
 
-    def exact_method(self, weight, nb_cities):
+class Exact:
+    def __init__(self, weight_matrix):
+        self.weight_matrix = weight_matrix
+        self.number_cities = len(weight_matrix)
+        self.resulting_path = []
+
+    def objective_expression(self, model):
+        return pyo.summation(model.weight_matrix, model.paths)
+
+    def constr_x_line(self, model, column):
+        return sum([model.paths[row, column] for row in model.rows if row != column]) == 1
+
+    def constr_x_column(self, model, row):
+        return sum([model.paths[row, column] for column in model.columns if column != row]) == 1
+
+    def constr_u(self, model, row, column):
+        if row != column:
+            return model.u[row] - model.u[column] + model.paths[row, column] * self.number_cities <= self.number_cities
+        else:
+            return pyo.Constraint.Feasible
+
+    def solve(self):
         model = pyo.ConcreteModel()
 
-        model.row = pyo.RangeSet(nb_cities)
-        model.column = pyo.RangeSet(nb_cities)
-        model.us = pyo.RangeSet(2, nb_cities)
+        model.rows = pyo.RangeSet(0, self.number_cities-1)
+        model.columns = pyo.RangeSet(0, self.number_cities-1)
+        model.us = pyo.RangeSet(1, self.number_cities-1)
 
-        model.W = pyo.Param(model.row, model.column, initialize=lambda model,i,j: weight[i-1][j-1])
+        model.weight_matrix = pyo.Param(model.rows, model.columns,
+                                        initialize=lambda model, row, column: self.weight_matrix[row][column])
 
-        model.X = pyo.Var(model.row, model.column, domain=pyo.Binary)
-        model.u = pyo.Var(model.row, domain=pyo.NonNegativeIntegers, bounds=(0, nb_cities-1))
+        model.paths = pyo.Var(model.rows, model.columns, domain=pyo.Binary)
 
-        def objective_expression(model):
-            return sum(model.W[i,j]*model.X[i,j] for i in model.row for j in model.column)
+        model.objective = pyo.Objective(rule=self.objective_expression, sense=pyo.minimize)
 
-        model.objective = pyo.Objective(rule=objective_expression, sense=pyo.minimize)
+        model.u = pyo.Var(model.rows, domain=pyo.NonNegativeIntegers, bounds=(0, self.number_cities-1))
 
-        def constr_x_line(model, column):
-            return sum([model.X[i, column] for i in model.row if i!=column]) == 1
-
-        def constr_x_column(model, row):
-            return sum([model.X[row, j] for j in model.column if j!=row]) == 1
-
-        def constr_u(model, row, column):
-            if row != column:
-                return model.u[row]-model.u[column] + model.X[row, column]*nb_cities <= nb_cities-1
-            else:
-                return model.u[row]-model.u[row] == 0
-
-        model.XLineConstraint = pyo.Constraint(model.column, rule=constr_x_line)
-        model.XColumnConstraint = pyo.Constraint(model.row, rule=constr_x_column)
-        model.UConstraint = pyo.Constraint(model.us, model.column, rule=constr_u)
+        model.XLineConstraint = pyo.Constraint(model.columns, rule=self.constr_x_line)
+        model.XColumnConstraint = pyo.Constraint(model.rows, rule=self.constr_x_column)
+        model.UConstraint = pyo.Constraint(model.us, model.columns, rule=self.constr_u)
 
         solver = SolverFactory('glpk')
-        exact_result = solver.solve(model)
+        solver.solve(model)
 
-        L = list(model.X.keys())
-        solution = []
-        for indice in L:
-            if model.X[indice]() != 0:
-                solution.append(indice[0])
-        solution.append(solution[0])
-        return solution
+        L = list(model.paths.keys())
+
+        for index in L:
+            if model.paths[index]() != 0:
+                self.resulting_path.append(index[0])
+        self.resulting_path.append(self.resulting_path[0])

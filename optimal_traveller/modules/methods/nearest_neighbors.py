@@ -2,9 +2,9 @@ import random
 
 
 class NearestNeighbors:
-    def __init__(self, data):
-        self.weight_matrix = data["weight_matrix"]
-        self.number_cities = data["settings"]["number_cities"]
+    def __init__(self, weight_matrix):
+        self.weight_matrix = weight_matrix
+        self.number_cities = len(weight_matrix)
         self.remaining_cities = [i for i in range(self.number_cities)]
         self.number_remaining_cities = self.number_cities
         self.resulting_path = []
