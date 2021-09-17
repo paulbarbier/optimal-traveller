@@ -19,4 +19,6 @@ class Solver:
         self.resulting_path = solver.resulting_path
 
     def genetic_solver(self):
-        pass
+        solver = Genetic(percentage, size, steps, self.data["weight_matrix"])
+        solver.solve()
+        self.resulting_path = solver.resulting_path
