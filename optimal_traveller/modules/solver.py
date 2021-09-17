@@ -20,4 +20,6 @@ class Solver:
     def exact_solver(self):
         test = Solver()
         test.exact_method('pyomo_data.txt')
-        
+
+    def heuristic2(self):
+        pass
