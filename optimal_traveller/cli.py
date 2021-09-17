@@ -23,6 +23,8 @@ class Cli:
             print("Compute orthodromic distances")
             self.loader.compute_orthodromic_distances()
 
+        self.loader.change_weight_matrix_diagonal()
+
         output_filename = basename + ".opt"
         print("Save data to ", output_filename)
         self.loader.write_json(output_filename)
