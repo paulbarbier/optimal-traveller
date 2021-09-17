@@ -55,7 +55,7 @@ class Genetic:
                 ind -= 1
 
     def select_population(self):
-        limit = int(self.percentage*len(self.population))
+        limit = int((1-self.percentage)*len(self.population))
         for i in range(limit):
             self.population.pop(-1)
 
