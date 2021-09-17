@@ -33,7 +33,7 @@ class Graphic:
                 path[0].append(self.coordinates_from_id(city))
             path[0].append(self.coordinates_from_id(solution["resulting_path"][0]))
 
-            usa = folium.Map(location=[self.latitude_center, self.longitude_center], zoom_start=5)
+            usa = folium.Map(location=[self.latitude_center, self.longitude_center], zoom_start=6.2)
             for city in self.cities:
                 folium.Marker(location=[city["latitude"], city["longitude"]], popup=city["name"]).add_to(usa)
             folium.PolyLine(path, color='red').add_to(usa)
