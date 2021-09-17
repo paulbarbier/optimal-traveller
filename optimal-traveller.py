@@ -23,6 +23,9 @@ def main():
     solve_parser.add_argument("-f", "--filename", help="FILE.opt containing previsoulty computed distance matrix and data of the problem",
                               type=str, required=True)
     solve_parser.add_argument("-m", "--method", help="select the method used to solve: ", type=str, choices=["exact", "nearest-neighbors", "genetic"], required=True)
+    solve_parser.add_argument("--percentage", help="percentage of population automatically removed for the genetic method", type=float, default=0.5)
+    solve_parser.add_argument("--maxsteps", help="max number of iteration for the genetic method", type=int, default=10)
+    solve_parser.add_argument("--size", help="size of the population for the genetic method", type=int, default=15)
 
     display_parser.add_argument("-f", "--filename", help="FILENAME.opt, file of the solution(s) to be displayed", type=str, required=True)
 
@@ -40,7 +43,7 @@ def main():
     if arguments.command == "load":
         app.load(arguments.filename, arguments.metric)
     elif arguments.command == "solve":
-        app.solve(arguments.filename, arguments.method)
+        app.solve(arguments.filename, arguments.method, arguments.percentage, arguments.maxsteps, arguments.size)
     elif arguments.command == "display":
         app.display(arguments.filename)
 

@@ -30,9 +30,9 @@ class Cli:
         self.loader.write_json(output_filename)
         print("Dataset successfully loaded!")
 
-    def solve(self, filename, method):
+    def solve(self, filename, method, percentage, maxsteps, size):
         self.loader.read_json(filename)
-        solver = Solver(self.loader.data)
+        solver = Solver(self.loader.data, percentage, maxsteps, size)
 
         print("Solving the Travelling Salesman Problem with ", method, "method...")
         if method == "exact":
