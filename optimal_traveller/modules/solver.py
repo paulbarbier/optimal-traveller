@@ -13,14 +13,13 @@ class Solver:
         solver.solve()
         self.resulting_path = solver.resulting_path
 
-        def exact_solver(self, data):
-            W = data["weight_matrix"]
-            nb_cities = data['settings']['number_cities']
-            build = Exact()
-            solution = build.exact_method(W, nb_cities)
-            print(solution)
-            data['solutions'].append({"method": "Exact Method", "resulting_path": solution})
-
+    def exact_solver(self, data):
+        W = data["weight_matrix"]
+        nb_cities = data['settings']['number_cities']
+        build = Exact()
+        solution = build.exact_method(W, nb_cities)
+        print(solution)
+        data['solutions'].append({"method": "Exact Method", "resulting_path": solution})
 
     def genetic(self):
         pass
