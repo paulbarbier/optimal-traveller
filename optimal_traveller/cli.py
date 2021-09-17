@@ -1,6 +1,6 @@
-from modules.loader import Loader
-from modules.solver import Solver
-from modules.graphic import Graphic
+from optimal_traveller.modules.loader import Loader
+from optimal_traveller.modules.solver import Solver
+from optimal_traveller.modules.graphic import Graphic
 
 
 class Cli:
@@ -23,6 +23,8 @@ class Cli:
             print("Compute orthodromic distances")
             self.loader.compute_orthodromic_distances()
 
+        self.loader.change_weight_matrix_diagonal()
+
         output_filename = basename + ".opt"
         print("Save data to ", output_filename)
         self.loader.write_json(output_filename)
@@ -30,26 +32,21 @@ class Cli:
 
     def solve(self, filename, method):
         self.loader.read_json(filename)
-        #solver = Solver(self.loader.data)
+        solver = Solver(self.loader.data)
 
         print("Solving the Travelling Salesman Problem with ", method, "method...")
         if method == "exact":
             pass
         elif method == "nearest-neighbors":
-            set = self.loader.data
-            new = Solver()
-            new.solver_nn(set, 8)
+            solver.nearest_neighbors_solver()
         elif method == "genetic":
             pass
 
+        self.loader.data["solutions"].append({"method": method, "resulting_path": solver.resulting_path})
+
         print("Problem successfully solved!")
-        self.loader.data = set
         self.loader.write_json(filename)
         print("file successfully written to ", filename)
 
     def display(self, solution):
         self.loader.read_json(solution)
-
-
-test = Cli()
-test.solve('modules/test.opt', 'nearest-neighbors')

@@ -1,25 +1,20 @@
-from modules.methods.dijkstra import NearestNeighbour
-# from modules.methods.exact import Exact
-from modules.loader import Loader
+from optimal_traveller.modules.methods.nearest_neighbors import NearestNeighbors
+from optimal_traveller.modules.methods.exact import Exact
+from optimal_traveller.modules.methods.genetic import Genetic
+
 
 class Solver:
-    def __init__(self):
-        pass
+    def __init__(self, data):
+        self.data = data
+        self.resulting_path = []
 
-    # Fonction finale qui ajoute la solution dans data
-
-    def solver_nn(self, data, start_city):
-        W = data["weight_matrix"]
-        nb_cities = data['settings']['number_cities']
-        Liste = [i for i in range(nb_cities)]
-        solution = NearestNeighbour()
-        Ordre = solution.nearest_neighbour(W, Liste, start_city)
-        data['solutions'].append({"method": "Nearest Neighbour", "resulting_path": Ordre})
-
+    def nearest_neighbors_solver(self):
+        solver = NearestNeighbors(self.data)
+        solver.solve()
+        self.resulting_path = solver.resulting_path
 
     def exact_solver(self):
-        test = Solver()
-        test.exact_method('pyomo_data.txt')
+        pass
 
-    def heuristic2(self):
+    def genetic(self):
         pass

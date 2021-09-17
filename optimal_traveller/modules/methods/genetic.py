@@ -2,7 +2,7 @@ import random
 random.seed()
 
 
-class Heuristic:
+class Genetic:
     def __init__(self, percentage):
         self.percentage = percentage
         self.population = []
@@ -52,10 +52,11 @@ class Heuristic:
         for i in range(20):
             self.random_path_generator(nodes)
 
-    def Heuristic(self, steps, nodes, percentage, weight):
+    def solve_genetic(self, steps, nodes, percentage, weight):
         self.population_generator(nodes)
         self.sort_population()
         self.select_population(percentage)
         iteration = 1
         while iteration < steps:
+            pass
             

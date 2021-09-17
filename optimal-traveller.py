@@ -20,7 +20,7 @@ def main():
     load_parser.add_argument("-f", "--filename", help="FILENAME.txt or FILENAME.json to be loaded in the solver", type=str, required=True)
     load_parser.add_argument("-m", "--metric", help="metric used to compute the distance matrix: euclidean or orthodromic", type=str, choices=["euclidean", "orthodromic"], default="orthodromic")
 
-    solve_parser.add_argument("-f", "--file", help="FILE.opt containing previsoulty computed distance matrix and data of the problem",
+    solve_parser.add_argument("-f", "--filename", help="FILE.opt containing previsoulty computed distance matrix and data of the problem",
                               type=str, required=True)
     solve_parser.add_argument("-m", "--method", help="select the method used to solve: ", type=str, choices=["exact", "nearest-neighbors", "genetic"], required=True)
 
@@ -40,7 +40,7 @@ def main():
     if arguments.command == "load":
         app.load(arguments.filename, arguments.metric)
     elif arguments.command == "solve":
-        app.solve(arguments.graph, arguments.method)
+        app.solve(arguments.filename, arguments.method)
     elif arguments.command == "display":
         app.display(arguments.solution)
 

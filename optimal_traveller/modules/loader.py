@@ -1,4 +1,5 @@
 import json
+import sys
 from math import sqrt, radians, sin, cos, asin
 
 
@@ -69,3 +70,8 @@ class Loader:
                 column_number += 1
             row_number += 1
         self.data["settings"]["metric"] = "orthodromic"
+
+    def change_weight_matrix_diagonal(self):
+        weight = min(sum(sum(self.data["weight_matrix"], [])), sys.float_info.max/1000)
+        for i in range(len(self.data["weight_matrix"])):
+            self.data["weight_matrix"][i][i] = weight
