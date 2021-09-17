@@ -1,4 +1,4 @@
-from modules.methods.dijkstra import NearestNeighbour
+from modules.methods.nearest_neighbors import NearestNeighbors
 # from modules.methods.exact import Exact
 from modules.loader import Loader
 

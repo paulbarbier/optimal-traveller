@@ -1,4 +1,4 @@
-class NearestNeighbour:
+class NearestNeighbors:
     def __init__(self):
         pass
 
